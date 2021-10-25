@@ -11,7 +11,7 @@ Software:      Vscode
 '''开发使用'''
 
 import time
-from waveshare_epd import epd4in2bc
+from waveshare_epd import epd4in2bc, epd4in2
 from PIL import Image,ImageDraw,ImageFont
 import logging
 from schedule import repeat, every, run_pending
@@ -23,30 +23,46 @@ logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, datefmt=DATE_FORMAT)
 
 
 font_path = "/home/pi/Projects/test_epaper/e-Paper/test_my/lib/Font.ttc"
-epd = epd4in2bc.EPD()
+# epd = epd4in2bc.EPD()
+epd = epd4in2.EPD()
+epd.init()
+epd.Clear()
 logging.info("e-paper initlized!")
 
-# epd.init()
 # epd.Clear()
 # logging.info("e-paper cleared!")
 
 # image_b = Image.new('1', (epd.width, epd.height), 255)
 # image_r = Image.new('1', (epd.width, epd.height), 0)
-font60 = ImageFont.truetype(font=font_path, size=60)
-font15 = ImageFont.truetype(font=font_path, size=15)
+# font60 = ImageFont.truetype(font=font_path, size=60)
+# font17 = ImageFont.truetype(font=font_path, size=17)
 
 def flush_time(epd, drawer_b, drawer_r, last_time):
-    # drawer_b = ImageDraw.Draw(image_b)
-    # drawer_r = ImageDraw.Draw(image_r)
+    weekday = {
+        "Mon": "周 一",
+        "Tues": "周 二",
+        "Wed": "周 三",
+        "Thur": "周 四",
+        "Fri": "周 五",
+        "Sat": "周 六",
+        "Sun": "周 日"
+    }
+    font60 = ImageFont.truetype(font=font_path, size=60)
+    font17 = ImageFont.truetype(font=font_path, size=17)
 
     current_time = time.strftime("%H:%M", time.localtime())
     if current_time == last_time:
         return False, last_time
     else:
-        current_date = time.strftime("%Y - %m - %d,   %a", time.localtime())
+        current_date = time.strftime("%Y-%m-%d;%a", time.localtime())
+        current_date = ",    ".join([current_date.split(";")[0], weekday.get(current_date.split(";")[-1])])
 
         drawer_b.text((10, 10), current_time, font=font60, fill=0)
-        drawer_b.text((20, 80), current_date, font=font15, fill=0)
+        drawer_b.text((13, 80), current_date, font=font17, fill=0)
+
+        # draw a line
+        drawer_b.rectangle((0, 105, epd.width, 110), fill=0)
+        drawer_b.rectangle((170, 0, 175, 110), fill=0)
 
         logging.info(f"Time Flushing Successfully!")
 
@@ -73,7 +89,8 @@ class tasks_sequence:
         if need_flush:
             self.epd.init()
             # self.epd.Clear()
-            self.epd.display(self.epd.getbuffer(self.image_b), self.epd.getbuffer(self.image_r))
+            # self.epd.display(self.epd.getbuffer(self.image_b), self.epd.getbuffer(self.image_r))
+            self.epd.display(self.epd.getbuffer(self.image_b))
             self.epd.sleep()
 
         return 
