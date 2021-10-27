@@ -40,9 +40,9 @@ logging.info("e-paper initlized!")
 def flush_time(epd, drawer_b, drawer_r, last_time):
     weekday = {
         "Mon": "周 一",
-        "Tues": "周 二",
+        "Tue": "周 二",
         "Wed": "周 三",
-        "Thur": "周 四",
+        "Thu": "周 四",
         "Fri": "周 五",
         "Sat": "周 六",
         "Sun": "周 日"
@@ -97,10 +97,43 @@ class tasks_sequence:
 
 
 if __name__ == '__main__':
-    tasks = tasks_sequence(epd)
-    tasks.tasks()
+    # tasks = tasks_sequence(epd)
+    # tasks.tasks()
 
-    every(3).seconds.do(tasks.tasks)
-    while True:
-        run_pending()
-        time.sleep(1)
+    # every(3).seconds.do(tasks.tasks)
+    # while True:
+    #     run_pending()
+    #     time.sleep(1)
+
+    # image = Image.new("1", (epd.width, epd.height), 255)
+    # image2 = Image.new("1", (10, 10), 255)
+    font17 = ImageFont.truetype(font=font_path, size=17)
+
+    # drawer = ImageDraw.Draw(image)
+    # drawer2 = ImageDraw.Draw(image2)
+
+    # drawer.rectangle((30, 30, 40, 40), fill=0)
+    # epd.display(epd.getbuffer(image))
+
+    # drawer2.text((0, 0), "hello", font=font17, fill=0)
+    # epd.display(epd.getbuffer(image2))
+
+    # import requests
+
+    # requests.get(url="http://wttr.in/Chenggong+Kunming?2AFqTn")
+    # print(1111)
+
+    # print(time.mktime(time.strptime("08:00:00", "%H:%M:%S")))
+
+    image = Image.new('1', (epd.width, epd.height), 255)
+    drawer = ImageDraw.Draw(image)
+
+    pic = Image.open("/home/pi/Projects/persoanlCalendar/utils/rain.bmp")
+    image.paste(pic, (100, 100))
+    drawer.text((175, 80), "Hello", font=font17, fill=0)
+    epd.display(epd.getbuffer(image))
+
+    # def test(**kargs):
+    #     print(kargs['a'])
+
+    # test(a=111)

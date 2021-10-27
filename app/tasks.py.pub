@@ -1,0 +1,58 @@
+# -*- coding: utf-8 -*-
+'''
+Project:       /home/pi/Projects/persoanlCalendar/app
+File Name:     tasks.py
+Author:        Chaos
+Email:         life0531@foxmail.com
+Date:          2021/10/26
+Software:      Vscode
+'''
+
+'''所有任务注册类'''
+import logging
+from PIL import Image, ImageDraw
+from timer import TimeFlusher
+from weather import Weather
+
+class Tasks:
+    def __init__(self, epd, font_path) -> None:
+        # for all members
+        self.epd = epd
+        self.font_path = font_path
+
+        # some variables for specific task
+        # for time flusher
+        self.last_time = 0
+        # for weather
+        self.weather_key = "xxx"
+
+    def setup_tasks(self):
+        # register tasks
+        self.timer = TimeFlusher(font_path=self.font_path)
+        self.weather = Weather(font_path=self.font_path, city=530114, key=self.weather_key)
+
+    def run(self):
+        '''run all tasks'''
+        need_flush = {}
+
+        # setup screen
+        image = Image.new("1", (self.epd.width, self.epd.height), 255)
+        drawer = ImageDraw.Draw(image)
+
+        # run tasks
+        # timer
+        try:
+            need_flush["timer"], self.last_time = self.timer(epd=self.epd, drawer=drawer, last_time=self.last_time)
+        except Exception as e:
+            logging.critical(f"Timer failed 'cause: {e}")
+        # weather
+        try:
+            need_flush["weather"] = self.weather(epd=self.epd, drawer=drawer, image=image)
+        except Exception as e:
+            logging.error(f"Weather faild 'cause {e}")
+
+        # flush screen or not
+        if True in need_flush.values():
+            self.epd.init()
+            self.epd.display(self.epd.getbuffer(image))
+            self.epd.sleep()
