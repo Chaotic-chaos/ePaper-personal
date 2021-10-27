@@ -20,11 +20,12 @@ from tasks import Tasks
 # set logger
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, datefmt=DATE_FORMAT)
 
 parser = argparse.ArgumentParser()
 
 parser.add_argument("--font-path", default="/home/pi/Projects/persoanlCalendar/utils/STHeiti-Medium-4.ttc")
+parser.add_argument("--weather-city", default=530114)
 
 
 args = parser.parse_args()
@@ -38,16 +39,16 @@ if __name__ == '__main__':
 
     # setup tasker
     tasker = Tasks(epd=epd, font_path=args.font_path)
-    tasker.setup_tasks()
+    tasker.setup_tasks(city=args.weather_city)
 
     # run all task once
     tasker.run()
 
     # setup schduler
-    # every(3).seconds.do(tasker.run)
+    every(3).seconds.do(tasker.run)
     
-    # # start tasks
-    # while True:
-    #     run_pending()
-    #     time.sleep(1)
+    # start tasks
+    while True:
+        run_pending()
+        time.sleep(1)
     

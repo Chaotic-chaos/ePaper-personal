@@ -26,10 +26,10 @@ class Tasks:
         # for weather
         self.weather_key = "xxx"
 
-    def setup_tasks(self):
+    def setup_tasks(self, **kargs):
         # register tasks
         self.timer = TimeFlusher(font_path=self.font_path)
-        self.weather = Weather(font_path=self.font_path, city=530114, key=self.weather_key)
+        self.weather = Weather(font_path=self.font_path, city=kargs["city"], key=self.weather_key)
 
     def run(self):
         '''run all tasks'''

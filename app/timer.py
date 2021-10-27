@@ -40,6 +40,6 @@ class TimeFlusher:
             drawer.rectangle((0, 105, epd.width, 110), fill=0)
             drawer.rectangle((170, 0, 175, 110), fill=0)
 
-            logging.info(f"Time Flushing Successfully!")
+            logging.debug(f"Time Flushing Successfully!")
 
             return True, current_time

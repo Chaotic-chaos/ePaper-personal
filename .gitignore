@@ -1,3 +1,6 @@
+.vscode
 e-Paper/
 venv/
 app/tasks.py
+__pycache__/
+app/__pycache__/

@@ -92,6 +92,8 @@ class Weather:
                 pic = self.weather_pic_path["default"]
             icon = Image.open(pic)
             kargs['image'].paste(icon, (230, 0, 285, 55))
+            # draw city
+            drawer.text((185, 5), f'{self.weather_res["forecasts"][0]["city"]}', font=self.font_tiny, fill=0)
             # draw date
             drawer.text((185, 80), f'{"-".join(self.weather_res["forecasts"][0]["casts"][0]["date"].split("-")[1:])},  {self.weather_res["forecasts"][0]["casts"][0]["dayweather"]}', font=self.font_small, fill=0)
             # draw temperture
@@ -139,5 +141,31 @@ class Weather:
             pic = self.weather_pic_path["default"]
         icon = Image.open(pic)
         kargs['image'].paste(icon, (230, 0, 285, 55))
+        # draw city
+        drawer.text((185, 5), f'{self.weather_res["forecasts"][0]["city"]}', font=self.font_tiny, fill=0)
+        # draw date
+        drawer.text((185, 80), f'{"-".join(self.weather_res["forecasts"][0]["casts"][0]["date"].split("-")[1:])},  {self.weather_res["forecasts"][0]["casts"][0]["dayweather"]}', font=self.font_small, fill=0)
+        # draw temperture
+        drawer.text((185, 35), f'{self.weather_res["forecasts"][0]["casts"][0]["daytemp"]}', font=self.font_big, fill=0)
+        drawer.text((230, 60), f'  ~{self.weather_res["forecasts"][0]["casts"][0]["nighttemp"]}', font=self.font_small, fill=0)
+        drawer.text((270, 63), f"℃", font=self.font_tiny, fill=0)
+        # tomorrow
+        # decide the pic
+        if "雨" in self.weather_res["forecasts"][0]["casts"][0]["dayweather"]:
+            pic = self.weather_pic_path["rain"]
+        elif "晴" in self.weather_res["forecasts"][0]["casts"][0]["dayweather"]:
+            pic = self.weather_pic_path["sunny"]
+        elif "阴" in self.weather_res["forecasts"][0]["casts"][0]["dayweather"]:
+            pic = self.weather_pic_path["cloud"]
+        else:
+            pic = self.weather_pic_path["default"]
+        icon = Image.open(pic)
+        kargs['image'].paste(icon, (epd.width-55, 0, epd.width, 55))
+        # draw date
+        drawer.text((300, 80), f'{"-".join(self.weather_res["forecasts"][0]["casts"][1]["date"].split("-")[1:])},  {self.weather_res["forecasts"][0]["casts"][0]["dayweather"]}', font=self.font_small, fill=0)
+        # draw temperture
+        drawer.text((300, 35), f'{self.weather_res["forecasts"][0]["casts"][1]["daytemp"]}', font=self.font_big, fill=0)
+        drawer.text((345, 60), f'  ~{self.weather_res["forecasts"][0]["casts"][1]["nighttemp"]}', font=self.font_small, fill=0)
+        drawer.text((385, 63), f"℃", font=self.font_tiny, fill=0)
 
         return True
