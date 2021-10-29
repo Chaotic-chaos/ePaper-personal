@@ -11,6 +11,8 @@ Software:      Vscode
 '''所有任务注册类'''
 import logging
 from PIL import Image, ImageDraw
+from todoer import Todoer
+from setup_screen import Starter
 from timer import TimeFlusher
 from weather import Weather
 
@@ -25,11 +27,23 @@ class Tasks:
         self.last_time = 0
         # for weather
         self.weather_key = "xxx"
+        # for todoer
+        self.client_id = "xxx"
+        self.refresh_token = "xxx"
+        self.client_secret = "xxx"
+        self.task_list_ids = {
+            "xxx": "xxx",
+        }
+        self.catagory_expression = {
+            "xxxx": "xxx",
+        }
 
     def setup_tasks(self, **kargs):
         # register tasks
+        self.starter = Starter()
         self.timer = TimeFlusher(font_path=self.font_path)
         self.weather = Weather(font_path=self.font_path, city=kargs["city"], key=self.weather_key)
+        self.todoer = Todoer(client_id=self.client_id, refresh_token=self.refresh_token, client_secret=self.client_secret, font_path=self.font_path, task_list_ids=self.task_list_ids, catagory_expression=self.catagory_expression)
 
     def run(self):
         '''run all tasks'''
@@ -40,6 +54,8 @@ class Tasks:
         drawer = ImageDraw.Draw(image)
 
         # run tasks
+        # split screen
+        self.starter(epd=self.epd, drawer=drawer)
         # timer
         try:
             need_flush["timer"], self.last_time = self.timer(epd=self.epd, drawer=drawer, last_time=self.last_time)
@@ -50,9 +66,17 @@ class Tasks:
             need_flush["weather"] = self.weather(epd=self.epd, drawer=drawer, image=image)
         except Exception as e:
             logging.error(f"Weather faild 'cause {e}")
+        # todoer
+        try:
+            self.todoer(drawer=drawer, epd=self.epd)
+        except Exception as e:
+            logging.error(f"Todoer filed 'cause {e}")
 
         # flush screen or not
         if True in need_flush.values():
             self.epd.init()
             self.epd.display(self.epd.getbuffer(image))
             self.epd.sleep()
+            for k, v in need_flush.items():
+                if v == True:
+                    logging.info(f"{k} needs to flush screen!")

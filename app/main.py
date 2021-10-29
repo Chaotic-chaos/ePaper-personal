@@ -20,7 +20,7 @@ from tasks import Tasks
 # set logger
 LOG_FORMAT = "%(asctime)s - %(levelname)s - %(message)s"
 DATE_FORMAT = "%m/%d/%Y %H:%M:%S %p"
-logging.basicConfig(level=logging.INFO, format=LOG_FORMAT, datefmt=DATE_FORMAT)
+logging.basicConfig(level=logging.DEBUG, format=LOG_FORMAT, datefmt=DATE_FORMAT)
 
 parser = argparse.ArgumentParser()
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
     tasker.run()
 
     # setup schduler
-    every(3).seconds.do(tasker.run)
+    every(10).seconds.do(tasker.run)
     
     # start tasks
     while True:

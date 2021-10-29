@@ -36,10 +36,6 @@ class TimeFlusher:
             drawer.text((10, 10), current_time, font=self.font_big, fill=0)
             drawer.text((13, 80), current_date, font=self.font_small, fill=0)
 
-            # draw a line
-            drawer.rectangle((0, 105, epd.width, 110), fill=0)
-            drawer.rectangle((170, 0, 175, 110), fill=0)
-
             logging.debug(f"Time Flushing Successfully!")
 
             return True, current_time
